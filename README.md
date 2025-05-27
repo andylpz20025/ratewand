@@ -46,8 +46,7 @@ Das Programm wurde privat entwickelt und steht nur für den privaten Gebrauch zu
 Jegliche kommerzielle Nutzung, Vervielfältigung oder Weitergabe ohne Genehmigung ist untersagt.  
 Der Autor übernimmt keine Haftung für Schäden oder Datenverlust durch Nutzung des Programms.
 
-### Etsy-Verwendung
-Dieses Programm wird auch auf [Etsy.com](https://etsy.com) als Download angeboten.  
+
 Für Fragen oder Support kontaktiere bitte: **akhler362003@gmail.com**
 
 ---
@@ -97,8 +96,7 @@ The program was privately developed and is provided for private use only.
 Any commercial use, reproduction, or distribution without permission is prohibited.  
 The author is not liable for damages or data loss from using this software.
 
-### Etsy Availability
-This program is also available for download on [Etsy.com](https://etsy.com).  
+
 For questions or support, please contact: **akhler362003@gmail.com**
 
 ---
