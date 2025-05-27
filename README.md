@@ -1,3 +1,139 @@
+Deutsch
+Ratewand Python Programm
+Dieses private Python-Programm besteht aus zwei Anwendungen zur Steuerung und Anzeige eines interaktiven Buchstabenrätselspiels („Ratewand“). Es wurde ausschließlich für den privaten Gebrauch entwickelt.
+
+Funktionen:
+
+control.py: GUI zur Eingabe von Kategorien und Buchstaben in einem 4x13-Raster. Sendet die Daten per Netzwerk an die Anzeige.
+
+display.py: Empfängt die Daten, zeigt das Puzzle mit grafischer Benutzeroberfläche an und verwaltet die Buchstabenaufdeckung. Unterstützt optionale Soundeffekte für richtige und falsche Buchstabeneingaben.
+
+Voraussetzungen:
+
+Betriebssystem: Windows 10 oder neuer
+
+Python-Version: 3.7 oder höher
+
+Installierte Python-Module:
+
+tkinter (normalerweise vorinstalliert)
+
+pygame (kann mit pip install pygame installiert werden)
+
+Sounddateien:
+
+Im Programmordner muss ein Unterordner namens sounds selbst erstellt werden.
+
+Die Sounddateien müssen in diesem sounds-Ordner liegen und heißen genau:
+
+buchstabe.mp3 (für korrekte Buchstaben)
+
+kein_buchstabe.mp3 (für falsche Buchstaben)
+
+Sound ist optional; das Programm läuft auch ohne diese Dateien.
+
+Installation:
+
+Installiere Python 3.7 oder höher von python.org.
+
+Installiere die benötigten Module mit:
+
+bash
+Kopieren
+Bearbeiten
+pip install pygame
+Lade die Dateien control.py, display.py, start.bat und diese README herunter und speichere sie im selben Ordner.
+
+Erstelle den Ordner sounds im gleichen Ordner und füge dort die beiden MP3-Dateien ein (siehe oben).
+
+Starte das Programm mit der start.bat, die beide Komponenten gleichzeitig startet.
+
+Nutzung:
+
+display.py zeigt das Puzzle an und reagiert auf Tastatureingaben.
+
+control.py dient zur Eingabe des Puzzles und sendet es an die Anzeige.
+
+Soundeffekte werden bei richtiger oder falscher Eingabe abgespielt (wenn vorhanden).
+
+Hinweis:
+Dieses Programm ist ausschließlich für private Zwecke bestimmt. Kommerzielle Nutzung oder Verbreitung ohne Genehmigung ist nicht erlaubt.
+
+Kontakt:
+Bei Fragen erreichst du mich unter: akhler362003@gmail.com
+
+English
+Ratewand Python Program
+This private Python program consists of two applications for controlling and displaying an interactive letter puzzle game ("Ratewand"). It is intended strictly for private use.
+
+Features:
+
+control.py: GUI for entering categories and letters in a 4x13 grid, sending data via network to the display.
+
+display.py: Receives data, shows the puzzle with a graphical user interface, manages letter uncovering, and supports optional sound effects for correct and incorrect letters.
+
+Requirements:
+
+Operating System: Windows 10 or newer
+
+Python version: 3.7 or higher
+
+Installed Python modules:
+
+tkinter (usually pre-installed)
+
+pygame (install via pip install pygame)
+
+Sound files:
+
+A folder named sounds must be manually created inside the program directory.
+
+The sound files must be placed inside this sounds folder and must be named exactly:
+
+buchstabe.mp3 (for correct letters)
+
+kein_buchstabe.mp3 (for incorrect letters)
+
+Sound is optional; the program runs without these files.
+
+Installation:
+
+Install Python 3.7 or higher from python.org.
+
+Install the required modules:
+
+bash
+Kopieren
+Bearbeiten
+pip install pygame
+Download the files control.py, display.py, start.bat, and this README, and save them in the same folder.
+
+Create the sounds folder inside the same folder and add the two MP3 files (see above).
+
+Run the program using start.bat to launch both components simultaneously.
+
+Usage:
+
+display.py shows the puzzle and responds to keyboard input.
+
+control.py allows puzzle input and sends it to the display.
+
+Sound effects play on correct or incorrect input (if available).
+
+Note:
+This program is for private use only. Commercial use or distribution without permission is prohibited.
+
+Contact:
+For questions, contact: akhler362003@gmail.com
+
+
+
+
+
+
+
+
+
 
 # Ratewand Programm - README
 
@@ -111,3 +247,8 @@ start python control.py
 ---
 
 Vielen Dank für die Nutzung des Programms! / Thank you for using the program!
+
+
+
+
+
