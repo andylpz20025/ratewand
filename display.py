@@ -17,7 +17,7 @@ class DisplayApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Ratewand Display")
-        self.configure(bg="#000000")
+        self.configure(bg="#dedcd1")
 
         pygame.mixer.init()
         self.sound_buchstabe = self.load_sound("buchstabe.mp3")
@@ -152,6 +152,7 @@ class DisplayApp(tk.Tk):
                         self.start_bonus(letters)
                     elif msg["command"] == "bonus_solved":
                         self.stop_sound(self.sound_bonus)
+                        self.bonus_running = False  # Stoppt den Bonus-Countdown
                         self.reveal_all()
                         self.play_sound(self.sound_hauptpreis)  # Bonus gelöst -> Hauptpreis
                     elif msg["command"] == "reset_display":
