@@ -24,9 +24,12 @@ class DisplayApp(tk.Tk):
         self.sound_kein_buchstabe = self.load_sound("kein_buchstabe.mp3")
         self.sound_new_puzzle = self.load_sound("new_puzzle.mp3")
         self.sound_keine_kons = self.load_sound("keinekons.mp3")
-        self.sound_geloest = self.load_sound("geloest.mp3")
+        self.sound_geloest = self.load_sound("hauptpreis.mp3")
         self.sound_bonus = self.load_sound("bonus.mp3")
         self.sound_bonus_loes = self.load_sound("bonus_loes.mp3")
+        self.sound_bonus_verloren = self.load_sound("bonus_verloren.mp3")
+        self.sound_hauptpreis = self.load_sound("hauptpreis.mp3")
+        self.sound_einstieg_bonus = self.load_sound("einstieg_bonusrunde.mp3")
 
         self.puzzle = [["" for _ in range(COLS)] for _ in range(ROWS)]
         self.revealed = [[False]*COLS for _ in range(ROWS)]
@@ -111,7 +114,7 @@ class DisplayApp(tk.Tk):
                 led.config(bg=on_color)
             else:
                 led.config(bg=off_color)
-        self.after(500, self.toggle_leds)
+        self.after(250, self.toggle_leds)
 
     # ---------------- Server ----------------
     def start_server_thread(self):
@@ -150,7 +153,7 @@ class DisplayApp(tk.Tk):
                     elif msg["command"] == "bonus_solved":
                         self.stop_sound(self.sound_bonus)
                         self.reveal_all()
-                        self.play_sound(self.sound_geloest)
+                        self.play_sound(self.sound_hauptpreis)  # Bonus gelöst -> Hauptpreis
                     elif msg["command"] == "reset_display":
                         self.reset_display()
                     return
@@ -158,6 +161,7 @@ class DisplayApp(tk.Tk):
                 # Normales Puzzle
                 puzzle = msg.get("puzzle")
                 category = msg.get("category", "")
+                bonus_active = msg.get("bonus_active", False)  # Prüfen, ob Bonusrunde
                 if puzzle and len(puzzle) == ROWS and all(len(row) == COLS for row in puzzle):
                     self.puzzle = puzzle
                     self.category = category
@@ -171,6 +175,8 @@ class DisplayApp(tk.Tk):
                             if not ("A" <= ch.upper() <= "Ü"):
                                 self.revealed[r][c] = True
                     self.update_display()
+                    if bonus_active:
+                        self.play_sound(self.sound_einstieg_bonus)
                     self.play_sound(self.sound_new_puzzle)
             except Exception as e:
                 print("Fehler beim Verarbeiten:", e)
@@ -194,7 +200,6 @@ class DisplayApp(tk.Tk):
     def show_bonus_letters(self, letters):
         if not letters:
             return
-        # Enthüllt nur die Buchstaben, die im Rätsel vorhanden sind
         for key in letters:
             key = key.upper()
             self.used_letters.add(key)
@@ -209,8 +214,8 @@ class DisplayApp(tk.Tk):
             return
         self.show_bonus_letters(letters)
         self.bonus_running = True
-        self.bonus_countdown = 10
-        self.play_sound(self.sound_bonus, loops=-1)
+        self.bonus_countdown = 15   # jetzt 15 Sekunden
+        self.play_sound(self.sound_bonus)  # spielt 18s komplett
         self.update_bonus_countdown_label()
 
     def update_bonus_countdown_label(self):
@@ -219,14 +224,16 @@ class DisplayApp(tk.Tk):
             self.bonus_countdown -= 1
             self.after(1000, self.update_bonus_countdown_label)
         elif self.bonus_running:
-            self.stop_sound(self.sound_bonus)
-            self.bonus_label.config(text="Bonusrunde beendet")
+            # Zeit abgelaufen -> Bonusrunde verloren
             self.bonus_running = False
+            self.play_sound(self.sound_bonus_verloren)
+            self.reveal_all()
+            self.bonus_label.config(text="Bonusrunde verloren!")
 
     # ---------------- Tastenevents ----------------
     def highlight_cell(self, r, c):
         original_bg = self.cells[r][c].cget("bg")
-        self.cells[r][c].config(bg="lightgreen")
+        self.cells[r][c].config(bg="lightblue")
         self.after(200, lambda: self.cells[r][c].config(bg=original_bg))
 
     def on_key_press(self, event):
@@ -285,6 +292,7 @@ class DisplayApp(tk.Tk):
         self.bonus_countdown = 0
         self.stop_sound(self.sound_bonus)
         self.update_display()
+
         self.bonus_label.config(text="")
 
 if __name__ == "__main__":
