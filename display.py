@@ -91,7 +91,7 @@ class DisplayApp(tk.Tk):
         for r in range(ROWS):
             row_cells = []
             for c in range(COLS):
-                lbl = tk.Label(self.led_frame, text="", font=("Arial Black", 24), width=3, height=2,
+                lbl = tk.Label(self.led_frame, text="", font=("Arial Black", 35), width=3, height=2,
                                bg="gold", fg="black", borderwidth=2, relief="raised")
                 lbl.grid(row=r+1, column=c+1, padx=2, pady=2)
                 row_cells.append(lbl)
@@ -100,6 +100,10 @@ class DisplayApp(tk.Tk):
         self.used_letters_label = tk.Label(self, text="Genutzte Buchstaben: ", font=("Arial Black", 16),
                                            fg="red", bg="blue")
         self.used_letters_label.pack(pady=10, fill="x")
+
+        # Neue Info-Anzeige unter genutzten Buchstaben
+        self.letter_count_label = tk.Label(self, text="", font=("Arial Black", 16), fg="green", bg="yellow")
+        self.letter_count_label.pack(pady=5)
 
         self.bonus_label = tk.Label(self, text="", font=("Arial Black", 16), fg="yellow", bg="black")
         self.bonus_label.pack(pady=5)
@@ -152,9 +156,9 @@ class DisplayApp(tk.Tk):
                         self.start_bonus(letters)
                     elif msg["command"] == "bonus_solved":
                         self.stop_sound(self.sound_bonus)
-                        self.bonus_running = False  # Stoppt den Bonus-Countdown
+                        self.bonus_running = False
                         self.reveal_all()
-                        self.play_sound(self.sound_hauptpreis)  # Bonus gelöst -> Hauptpreis
+                        self.play_sound(self.sound_hauptpreis)
                     elif msg["command"] == "reset_display":
                         self.reset_display()
                     return
@@ -162,7 +166,7 @@ class DisplayApp(tk.Tk):
                 # Normales Puzzle
                 puzzle = msg.get("puzzle")
                 category = msg.get("category", "")
-                bonus_active = msg.get("bonus_active", False)  # Prüfen, ob Bonusrunde
+                bonus_active = msg.get("bonus_active", False)
                 if puzzle and len(puzzle) == ROWS and all(len(row) == COLS for row in puzzle):
                     self.puzzle = puzzle
                     self.category = category
@@ -215,17 +219,16 @@ class DisplayApp(tk.Tk):
             return
         self.show_bonus_letters(letters)
         self.bonus_running = True
-        self.bonus_countdown = 15   # jetzt 15 Sekunden
-        self.play_sound(self.sound_bonus)  # spielt 18s komplett
+        self.bonus_countdown = 15
+        self.play_sound(self.sound_bonus)
         self.update_bonus_countdown_label()
 
     def update_bonus_countdown_label(self):
         if self.bonus_running and self.bonus_countdown >= 0:
             self.bonus_label.config(text=f"Bonusrunde Countdown: {self.bonus_countdown}")
             self.bonus_countdown -= 1
-            self.after(1000, self.update_bonus_countdown_label)
+            self.after(1300, self.update_bonus_countdown_label)
         elif self.bonus_running:
-            # Zeit abgelaufen -> Bonusrunde verloren
             self.bonus_running = False
             self.play_sound(self.sound_bonus_verloren)
             self.reveal_all()
@@ -254,10 +257,42 @@ class DisplayApp(tk.Tk):
         self.revealed = [[True]*COLS for _ in range(ROWS)]
         self.update_display()
 
+    def fade_in_out(self, text, color):
+        """Text sanft ein- und ausblenden"""
+        self.letter_count_label.config(text=text)
+
+        # Einblenden (0 → 255)
+        def fade_in(step=0):
+            if step <= 255:
+                hex_val = f"#{step:02x}{step:02x}{step:02x}"
+                self.letter_count_label.config(fg=color)
+                self.after(20, lambda: fade_in(step+25))
+
+        # Ausblenden nach 5 Sekunden
+        def fade_out(step=255):
+            if step >= 0:
+                hex_val = f"#{step:02x}{step:02x}{step:02x}"
+                self.letter_count_label.config(fg=color)
+                self.after(20, lambda: fade_out(step-25))
+            else:
+                self.letter_count_label.config(text="")
+
+        fade_in()
+        self.after(5000, fade_out)
+
     def uncover_letters_with_sound(self, key):
         with self.lock:
             self.is_uncovering = True
+
         positions = [(r, c) for r in range(ROWS) for c in range(COLS) if self.puzzle[r][c].upper() == key]
+        count = len(positions)
+
+        # Anzeige mit Animation
+        if count > 0:
+            self.fade_in_out(f"{key} kommt {count} mal vor", "green")
+        else:
+            self.fade_in_out(f"{key} kommt 0 mal vor", "red")
+
         if positions:
             for r, c in positions:
                 self.revealed[r][c] = True
@@ -270,6 +305,7 @@ class DisplayApp(tk.Tk):
         else:
             self.play_sound(self.sound_kein_buchstabe)
             time.sleep(0.5)
+
         self.update_display()
         with self.lock:
             self.is_uncovering = False
@@ -295,6 +331,7 @@ class DisplayApp(tk.Tk):
         self.update_display()
 
         self.bonus_label.config(text="")
+        self.letter_count_label.config(text="")
 
 if __name__ == "__main__":
     app = DisplayApp()
